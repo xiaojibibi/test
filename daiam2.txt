@@ -1,0 +1,237 @@
+#include<iostream>
+#include <stdio.h>
+#include <fstream>
+#include <string.h> 
+#include <iomanip>
+#include <string>
+#define N 20
+using namespace std;
+struct 
+{
+char name[20]; //人名
+char post[20]; //工作单位
+int tel; //电话号码
+char email[20]; //email地址
+}TelInfo;
+void menu();
+ void addrecord()
+{
+  char ch;
+ ofstream ofile("Result.txt",ios_base::out);
+  do
+   {
+    cout<<"请输入通讯录信息"<<endl;
+    cin>>TelInfo.name>>TelInfo.post>>TelInfo.tel>>TelInfo.email;
+    ofile<<TelInfo.name<<"  "<<TelInfo.post<<"  "<<TelInfo.tel<<"  "<<TelInfo.email<<endl;
+ cout<<"have another student record(y/n))?"<<endl;
+
+ std::cin>>ch;
+   }while(ch=='y');
+   ofile.close();
+}
+
+void  changecord()
+{
+    ifstream da("Result.txt", ios_base::in);string str; bool flag = true;
+ ofstream data("return.txt", ios_base::out);
+ char a[20];
+ if (!da)
+    {
+        cout<<"找不到文件!!!!"<<endl;
+        return;
+    }
+ cout<<"请输入你要修改人的姓名"<<endl;
+ cin>>a;
+ while ( da>>TelInfo.name)
+    {  
+        getline(da, str);
+        
+        if (strcmp(TelInfo.name,a)==0)
+        {
+            cout<<"你想修改的联系人:" <<endl;
+            cout<<TelInfo.name<<"  "<<str<<endl;
+   flag=false;
+            break;
+        }
+        
+        data<<TelInfo.name
+            <<" "<<str<<endl;
+    }
+ if(flag)cout<<"没有该人"<<endl;
+ else
+ {
+        while (getline(da, str))
+        {
+            data<<str <<endl;
+        }
+        da.close();
+        data.close();
+        ifstream in("return.txt", ios::in);
+        ofstream out("Result.txt", ios::out);
+        if (!out || !in)
+        {
+            cout<<endl<<"对不起不能打开文件!!!"<<endl<<endl;
+            return;
+        }
+        while (getline(in, str))
+        {
+            out<<str<<endl;
+        } 
+        
+        in.close();
+        ofstream change("Result.txt",ios_base::app);
+  cout<<"请输入修改的信息"<<endl;
+        cin>>TelInfo.name>>TelInfo.post>>TelInfo.tel>>TelInfo.email;
+        out<<TelInfo.name<<"  "<<TelInfo.post<<"  "<<TelInfo.tel<<"  "<<TelInfo.email<<endl;
+        cout<<"这个人的信息已经从你的通迅录中修改!!!" <<endl;out.close();
+
+ }
+}
+void delrecord()
+{
+  ifstream da("Result.txt", ios_base::in);string str; bool flag = true;
+ ofstream data("return.txt", ios_base::out);
+ char a[20];
+ if (!da)
+    {
+        cout<<"找不到文件!!!!"<<endl;
+        return;
+    }
+ cout<<"请输入你要删除人的姓名"<<endl;
+ cin>>a;
+ while ( da>>TelInfo.name)
+    {  
+        getline(da, str);
+      if (strcmp(TelInfo.name,a)==0)
+        {
+            cout <<endl <<"你想删除的联系人:" <<endl;
+            cout<<TelInfo.name<<"  "<<str<<endl;
+   flag=false;
+            break;
+        }
+        
+        data<<TelInfo.name
+            <<" "<<str<<endl;
+    }
+ if(flag)cout<<"没有该人"<<endl;
+ else
+ {
+        while (getline(da, str))
+        {
+            data<<str <<endl;
+        }
+        da.close();
+        data.close();
+        ifstream in("return.txt", ios::in);
+        ofstream out("Result.txt", ios::out);
+        if (!out || !in)
+        {
+            cout<<endl<<"对不起不能打开文件!!!"<<endl<<endl;
+            return;
+        }
+        while (getline(in, str))
+        {
+            out<<str<<endl;
+        } 
+        out.close();
+        in.close();
+    cout <<endl <<"这个人的信息已经从你的通迅录中删除!!!" <<endl <<endl;
+
+ }
+
+}
+void printcord()
+{
+ char ch;
+ ifstream da("Result.txt");
+     cout<<"人名 "<<"工作单位 "<<"电话"<<" 地址"<<endl;
+ while (da.get(ch))
+    cout << ch;
+    da.close();
+
+}
+void searchcord()
+{
+ char a[20],b[20];int n,m;  ifstream da("Result.txt");
+ cout<<"请输入要查找方式:";
+ cout<<"1.姓名:";
+ cout<<"2.电话号码:";
+ cin>>n;
+ if(n==1)
+ {
+        cout<<"请输入要查询的姓名"<<endl;
+        cin>>a;
+  while(da.eof()==0)
+  {
+         da>>TelInfo.name>>TelInfo.post>>TelInfo.tel>>TelInfo.email;
+         if(strcmp(TelInfo.name,a)==0)
+   {
+                cout<<"人名 "<<"工作单位 "<<"电话"<<" 地址"<<endl;
+              cout<<TelInfo.name<<"  "<<TelInfo.post<<"  "<<TelInfo.tel<<"  "<<TelInfo.email<<endl;
+   }
+  } 
+  da.close();
+ }
+ if(n==2)
+ {
+  cout<<"请输入要查询的电话"<<endl;
+        cin>>m;
+  while(da.eof()==0)
+  {
+         da>>TelInfo.name>>TelInfo.post>>TelInfo.tel>>TelInfo.email;
+         if(TelInfo.tel==m)
+   {
+                cout<<"人名 "<<"工作单位 "<<"电话"<<" 地址"<<endl;
+              cout<<TelInfo.name<<"  "<<TelInfo.post<<"  "<<TelInfo.tel<<"  "<<TelInfo.email<<endl;
+   }
+  } 
+  da.close();
+ }
+
+    
+}
+void main()
+{
+ menu();
+}
+void menu()
+{
+   int i;
+    for(;;){
+        std::cout<<"通讯录管理系统字符界面版"<<std::endl;
+  std::cout<<"##################################"<<std::endl;
+        std::cout<<"请选择操作:"<<std::endl;
+        std::cout<<"\t1.添加记录"<<std::endl;
+        std::cout<<"\t2.修改记录"<<std::endl;
+        std::cout<<"\t3.删除记录"<<std::endl;
+        std::cout<<"\t4.数据显示"<<std::endl;
+        std::cout<<"\t5.查询记录"<<std::endl;
+  std::cout<<"\t6.退出"<<std::endl;
+        std::cin>>i;
+        if(!std::cin.good()){
+            std::cout<<"非法输入!"<<std::endl;
+            std::cin.clear();
+        }
+        switch(i){
+            case 1:
+                addrecord();break;
+            case 2:
+                changecord();
+                break;
+            case 3:
+                delrecord();
+                break;
+            case 4:
+                printcord();
+                break;
+            case 5:
+                searchcord();
+                break;
+            case 6:
+                return;
+           default:
+                std::cout<<"错误的选项!"<<std::endl;
+        }
+    }
+
+}
